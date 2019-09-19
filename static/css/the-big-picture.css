@@ -1,0 +1,39 @@
+/*!
+ * Start Bootstrap - The Big Picture (https://startbootstrap.com/template-overviews/the-big-picture)
+ * Copyright 2013-2017 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-the-big-picture/blob/master/LICENSE)
+ */
+
+body {
+  background-color: "#f7f7f7";
+  overflow-x: hidden;
+  overflow-y: hidden;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+}
+
+#over {
+    z-index: -1;
+    position: absolute;
+    margin-left: 3%;
+}
+
+.h1, h1 {
+    font-size: 200%;
+    margin-top: 8%;
+} 
+
+.node text {
+  pointer-events: none;
+  font-size: 10px;
+}
+
+text {
+    -webkit-user-select: none; /* Safari */        
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+    pointer-events: none;
+}
