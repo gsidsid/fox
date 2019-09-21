@@ -1,5 +1,7 @@
 import json
 import flask
+import subprocess
+import time
 
 from flask import request
 from flask_dropzone import Dropzone
@@ -22,7 +24,18 @@ def upload():
         f = request.files.get('file')
         f.save(os.path.join('files', f.filename))
 
-    return 'upload template'
+    def inner():
+        proc = subprocess.Popen(
+            ['python focstest.py files/' + f.filename + ' -v'],
+            shell=True,
+            stdout=subprocess.PIPE
+        )
+
+        for line in iter(proc.stdout.readline,''):
+            time.sleep(1)
+            yield line.rstrip()
+
+    return flask.Response(inner(), mimetype='text/html')
 
 @application.route('/how.html')
 def how():
