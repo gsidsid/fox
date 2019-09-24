@@ -139,7 +139,7 @@ def upload():
     print("Upload phase")
     if request.method == 'POST':
         f = request.files.get('file')
-        f.save(os.path.join('/app/files', f.filename))
+        f.save(os.path.join(os.getcwd()+'/files', f.filename))
     return flask.Response(status=200)
 
 @application.route('/compile/<filename>')
@@ -150,7 +150,7 @@ def compiler(filename):
     try:
         print("Compilation phase")
         print(os.listdir(os.getcwd()+"/files"))
-        comp_container = client.containers.run('akabe/ocaml:ubuntu16.04_ocaml4.07.0',volumes={'/app/files':{'bind':'/files', 'mode': 'ro'},'/var/run/docker.sock':{'bind':'/var/run/docker.sock', 'mode': 'rw'}},command="ocaml /files/" + str(filename))
+        comp_container = client.containers.run('akabe/ocaml:ubuntu16.04_ocaml4.07.0',volumes={os.getcwd()+'/files':{'bind':'/files', 'mode': 'ro'},'/var/run/docker.sock':{'bind':'/var/run/docker.sock', 'mode': 'rw'}},command="ocaml /files/" + str(filename))
         compilation_log_result = comp_container
         return flask.Response(status=200)
     except docker.errors.ContainerError as e:
@@ -161,7 +161,7 @@ def compiler(filename):
 @application.route('/test/<filename>')
 def tester(filename):
     client = docker.from_env()
-    exec_container = client.containers.run('sidworld/fox',environment=["TARGET="+filename],volumes={'/app/files':{'bind':'/files', 'mode': 'ro'}})
+    exec_container = client.containers.run('sidworld/fox',environment=["TARGET="+filename],volumes={os.getcwd()+'/files':{'bind':'/files', 'mode': 'ro'}})
     test_log_result = exec_container
     re.sub(r'\x1b(\[.*?[@-~]|\].*?(\x07|\x1b\\))', '', test_log_result)
     tr = TestResult(compilation_log_result, test_log_result)

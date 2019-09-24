@@ -6,7 +6,7 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
 
 body {
-  font-family: 'Montserrat', sans-serif !important;
+  font-family: monospace, 'Montserrat', sans-serif !important;
   background-color: "#f7f7f7";
   overflow-x: hidden;
   overflow-y: hidden;

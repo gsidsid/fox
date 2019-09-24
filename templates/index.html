@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Mirage - Containerized Testing</title>
+    <title>FoCS Evaluate</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -36,23 +36,10 @@
     <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light static-top">
     <div class="container">
-      <a class="navbar-brand" href="#">Mirage</a>
+      <a class="navbar-brand" href="#">FoCS Evaluate</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive">
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item active">
-            <a class="nav-link" href="#">Submit
-              <span class="sr-only">(current)</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Info</a>
-          </li>
-        </ul>
-      </div>
-    </div>
   </nav>
 
   <!-- Page Content -->
@@ -86,7 +73,7 @@
           Running tests
         </div>
 
-        <div id="test_output" class="text-left" >
+        <div id="test_output" style="margin-top: -5%;" class="text-left" >
         </div>
 
     </div>
@@ -122,7 +109,7 @@
       var res = "";
       var hnum = fname.split('.',1)[0].substr(8)
       var mailtol = "mailto:riccardo.pucella@olin.edu?subject=Homework%20" + hnum + "%20Submission";
-      res += "<span class='mb-3' style='font-size: 26px;font-weight: 400;'>Homework "+hnum+"</span><hr class='mb-3'/>";
+      res += "<span class='mr-2 mb-1 pl-1' style='font-size: 1.5rem;font-weight: 400;'>Homework "+hnum+"</span><hr class='mb-1'/>";
       res += "<div class='row mb-3' style='padding: 18px;'><button type='button' class='mr-3 btn btn-outline-secondary' onclick='downLogs(trr)' >Download logs</button><button type='button' class='mr-3 btn btn-outline-primary' onclick='javascript:location.href=\"" + mailtol + "\"'>Submit</button><button type='button' class='btn btn-outline-dark' onclick='location.reload(true)'>Try Again</button></div>"
 
       for (var i = 0; i < testResponse.length; i++) {
