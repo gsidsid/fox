@@ -10,6 +10,7 @@ Flask-Dropzone==1.5.4
 Flask-RESTful==0.3.7
 foreman==0.9.7
 heroku==0.1.4
+gunicorn==19.9.0
 ipaddress==1.0.22
 jsonpickle==1.0
 jsonschema==2.6.0
