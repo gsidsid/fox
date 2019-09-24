@@ -1,0 +1,74 @@
+/*!
+ * Start Bootstrap - The Big Picture (https://startbootstrap.com/template-overviews/the-big-picture)
+ * Copyright 2013-2017 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-the-big-picture/blob/master/LICENSE)
+ */
+@import url('https://fonts.googleapis.com/css?family=Montserrat&display=swap');
+
+body {
+  font-family: 'Montserrat', sans-serif !important;
+  background-color: "#f7f7f7";
+  overflow-x: hidden;
+  overflow-y: hidden;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+}
+
+.dz-size {
+  display:none !important;
+}
+
+.dropzone .dz-preview .dz-details .dz-filename span, .dropzone .dz-preview .dz-details .dz-size span {
+  background-color:transparent !important;
+  padding: 0 0.4em;
+  border-radius: 3px;
+}
+
+.dropzone .dz-preview .dz-details {
+    font-size: 14px !important;
+    padding: 10em 0em !important;
+}
+
+.dropzone .dz-preview .dz-details .dz-filename {
+    overflow: hidden !important;
+    text-overflow: unset !important;
+}
+
+.dropzone .dz-preview {
+    margin: 0px !important;
+}
+
+#status_details_box {
+    background-color: #ffffff !important;
+    color: #4d4d4d !important;
+    width: 75vw;
+    font-size: 14px;
+    min-height: 400px;
+    resize: none;
+    -webkit-appearance: none !important;
+    user-select: none;
+    padding: 45px 45px;
+    border-radius: 9px;
+    font-family: 'Consolas','Courier',sans-serif;
+}
+
+.h4, h4 {
+    font-size: 1.2rem !important;
+    font-family: monospace !important;
+}
+
+.card-text {
+  font-size: small;
+}
+
+.btn-outline-light .btn-sm {
+  font-size: smaller;
+}
+
+.modal-body {
+    max-height: calc(100vh - 210px);
+    overflow-y: auto;
+    font-family: monospace;
+}

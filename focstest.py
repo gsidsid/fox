@@ -157,7 +157,7 @@ def get_test_str(test_input: str, test_output: str, expected: str,
     return '\n'.join(lines)
 
 
-def infer_url(filename):
+def infer_url(filepath):
     """Infer a url based on a filename.
 
     Basically connects 'homeworkX.ml' -> 'http://.../hX.html'
@@ -170,7 +170,8 @@ def infer_url(filename):
     >>> infer_url('foo/bar/homework1.ml')
     'http://rpucella.net/courses/focs-fa19/homeworks/homework1.html'
     """
-    print("Filepath: " + str(filename))
+    filename = os.path.basename(filepath)
+    print("Filename: " + str(filename))
     match = OCAML_FILE_COMP.match(filename)
     if not match:
         return False

@@ -8,15 +8,27 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Fox - Rapid FoCS HW tool</title>
+    <title>Mirage - Containerized Testing</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{{ url_for('static', filename='vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="{{ url_for('static', filename='css/the-big-picture.css') }}" rel="stylesheet">
     {{ dropzone.load_css() }}
-    {{ dropzone.style('border: 1px dotted #b3b3b3; border-radius: 50px; min-height: 400px; padding: 30%;') }}
+    <link href="{{ url_for('static', filename='vendor/the-big-picture.css') }}" rel="stylesheet">
+    
+    {{ dropzone.style('
+      border: none !important;
+      border-radius: 50px;
+      min-height: -21vh;
+      padding: 42vh;
+      padding-top: 7vh !important;
+      padding-bottom: 74vh !important;
+      margin-left: -16vw;
+      margin-right: -16vw;
+      margin-top: -9vh;
+      font-size: 20px;
+    ') }}
   </head>
 
   <body>
@@ -24,7 +36,7 @@
     <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light static-top">
     <div class="container">
-      <a class="navbar-brand" href="#">Fox</a>
+      <a class="navbar-brand" href="#">Mirage</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -46,9 +58,37 @@
   <!-- Page Content -->
   <div class="container">
     <div class="row mt-5">
-      <div class="col-lg-12 text-center">
+      <div class="col-lg-12 text-center mt-5">
         {{ dropzone.create('/uploads') }}
-      </div>
+
+        <div id="status_fail" class="text-center" style="font-size: 22px;display:none">
+          Compilation failed.
+        </div>
+
+        <div id="status_details" class="row justify-content-center mt-1" style="display:none">
+          <div class="col-xs-1 center-block">
+            <center>
+              <textarea readonly id="status_details_box" style="background-color:gray; color:black; font-family:'Consolas','Courier',sans-serif;">
+              Error message
+              </textarea>
+            </center>
+          </div>
+        </div>
+        <div id="status_details_button" class="row justify-content-center mt-4" style="display:none;">
+          <button type="button" class="btn btn-outline-secondary" style="padding: 11px 30px;font-size: 18px;" onclick="location.reload(true)">Try again</button>
+        </div>
+
+        <div id="status_success" class="text-center" style="font-size: 22px;display:none">
+          Successfully compiled
+        </div>
+
+        <div id="status_testing" class="text-center" style="font-size: 22px;display:none">
+          Running tests
+        </div>
+
+        <div id="test_output" class="text-left" >
+        </div>
+
     </div>
   </div>
 
@@ -56,9 +96,127 @@
     <script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script type="text/JavaScript"> 
+    var fname = "";
+    var trr = undefined;
+
+    function IEO(ieoarr) {
+      ieores = "";
+      for (var j = 0; j < ieoarr.length; j++) {
+          ieo = ieoarr[j];
+          ieores += "INPUT: " + ieo["input"] + "<br>";
+          ieores += "---------------------------------<br>";
+          ieores += "EXPECTED: " + ieo["expected"] + "<br>";
+          ieores += "OUTPUT: " + ieo["output"] + "<br>";
+          ieores += "---------------------------------<br><br>";
+      }
+      return ieores;
+    }
+
+    function downLogs(testResponse) {
+      console.log(testResponse);
+    }
+
+    function genOutput(testResponse) {
+      trr = testResponse;
+      $("#status_testing").hide();
+      var res = "";
+      var hnum = fname.split('.',1)[0].substr(8)
+      var mailtol = "mailto:riccardo.pucella@olin.edu?subject=Homework%20" + hnum + "%20Submission";
+      res += "<span class='mb-3' style='font-size: 26px;font-weight: 400;'>Homework "+hnum+"</span><hr class='mb-3'/>";
+      res += "<div class='row mb-3' style='padding: 18px;'><button type='button' class='mr-3 btn btn-outline-secondary' onclick='downLogs(trr)' >Download logs</button><button type='button' class='mr-3 btn btn-outline-primary' onclick='javascript:location.href=\"" + mailtol + "\"'>Submit</button><button type='button' class='btn btn-outline-dark' onclick='location.reload(true)'>Try Again</button></div>"
+
+      for (var i = 0; i < testResponse.length; i++) {
+        colorcode = "danger";
+        test = testResponse[i];
+        test_name = Object.keys(testResponse[i])[0];
+        n_passes = test[test_name]["passed"].length;
+        n_fails = test[test_name]["failed"].length;
+        if (n_passes > 0) {
+          colorcode = "warning";
+        }
+        if (n_passes == n_fails) {
+          colorcode = "warning";
+        }
+        if (n_fails == 0 && n_passes != 0) {
+          colorcode = "success";
+        }
+
+        if (i%3 == 0) {
+          if (i != 0) {
+            res += "</div>"
+          }
+          res += "<div class='row'>"
+        }
+
+        res += "<div class='modal fade' tabindex='-1' id='testModal" + String(i) + "' role='dialog'>";
+        res += "<div class='modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered' role='document'>";
+        res += "<div class='modal-content'><div class='modal-header text-left'><h4 class='modal-title'>" + test_name + "</h4></div> <div class='modal-body'><div class='row'> <div class='col-md-6'> <p><span class='text-success'>" +  IEO(test[test_name]["passed"]) + "</span> </div><div class='col-md-6'> <span class='text-danger'>" + IEO(test[test_name]["failed"]) + "</span></p> </div> </div></div>  <div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div>";
+        res += "</div>";
+        res += "</div>";
+
+        res += "<div class='col ml-3 mb-3 card text-white bg-" + colorcode + "' style='width: 12rem;'><div class='card-body text-center'><h4 class='card-title'>" + test_name + "</h4><p class='card-text'>"+ String(n_passes) + "/" + String(n_passes+n_fails) + " tests passed.<br></p><button type='button' data-toggle='modal' data-target='#testModal" + String(i) + "' class='btn btn-outline-light btn-sm mt-3'>See details</button></div></div>";
+
+      }
+      document.getElementById('test_output').innerHTML = res;
+      $("#test_output").fadeIn(500);
+      document.body.style.overflowY = "auto";
+    }
+
+    function compilation(filename) {
+      fname = filename;
+      $.ajax({
+        url: "/compile/"+filename,
+        type: "get",
+        success: function(response) {
+          // ajax to run tests
+          // fade in compsucc 
+          $.ajax({
+            url: "/test/"+filename,
+            type: "get",
+            success: function(response) { 
+              $("#status_testing").fadeOut(1000);
+              setTimeout( function() { 
+                genOutput(response);
+              },1000);
+              
+            }, 
+          });
+
+          $("#status_success").fadeIn(1000);
+          setTimeout( function() { 
+            $("#status_success").fadeOut(2000);
+          },1000);
+
+          setTimeout( function() { 
+            $("#status_testing").fadeIn(1000);
+          },4000);
+        },
+        error: function(response) {
+          console.log(response.responseJSON.error);
+          $("#status_details_box").val(response.responseJSON.error);
+          $("#status_fail").fadeIn(1000);
+          setTimeout( function() { 
+            $("#status_fail").fadeOut(1000);
+          },1000);
+          setTimeout( function() { 
+            $("#status_details").fadeIn(500);
+            $("#status_details_button").fadeIn(2000);
+          },2000);
+        },
+       });
+    }
     </script>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     {{ dropzone.load_js() }}
+    {{ dropzone.config(default_message="To begin, drop a homework file here.",custom_init="
+    dz=this; 
+    this.on('success', function(file, response) { 
+      dz.disable(); 
+      setTimeout( function() { 
+        $('.dropzone').fadeOut(500);  
+      },1000);
+      compilation(dz.files[0].name);
+    });" ) }}
   </body>
 
 </html>

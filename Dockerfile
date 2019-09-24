@@ -3,8 +3,6 @@ ENV TARGET homework1.ml
 
 ENV PATH $PATH:/home/opam/.local/bin
 
-COPY ./files .
-
 RUN sudo apt-get update && \
     sudo apt-get upgrade -y && \
     sudo apt-get install -y zlib1g libgmp10 libzmq5 python3 python3-pip
@@ -17,10 +15,9 @@ RUN apt-get update && \
 
 RUN pip3 install bs4 requests termcolor
 
-ADD . .
-
 RUN ls
 
+ADD focstest.py .
 RUN echo "Analyzing file -> ${TARGET}"
 
-CMD ./focstest.py -v ${TARGET}
+CMD ./focstest.py -v "./files/${TARGET}"
