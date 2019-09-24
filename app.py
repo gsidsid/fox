@@ -149,7 +149,9 @@ def compiler(filename):
     test_log_result = ""
     try:
         print("Compilation phase")
-        comp_container = client.containers.run('akabe/ocaml:ubuntu16.04_ocaml4.07.0',volumes={str(os.getcwd())+'/files':{'bind':'/files', 'mode': 'ro'}},command="ocaml /files/" + str(filename))
+        print(os.getcwd())
+        print(os.listdir())
+        comp_container = client.containers.run('akabe/ocaml:ubuntu16.04_ocaml4.07.0',volumes={'/files':{'bind':'/files', 'mode': 'ro'}},command="ocaml /files/" + str(filename))
         compilation_log_result = comp_container
         return flask.Response(status=200)
     except docker.errors.ContainerError as e:
@@ -160,7 +162,7 @@ def compiler(filename):
 @application.route('/test/<filename>')
 def tester(filename):
     client = docker.from_env()
-    exec_container = client.containers.run('sidworld/fox',environment=["TARGET="+filename],volumes={str(os.getcwd())+'/files':{'bind':'/files', 'mode': 'ro'}})
+    exec_container = client.containers.run('sidworld/fox',environment=["TARGET="+filename],volumes={'/files':{'bind':'/files', 'mode': 'ro'}})
     test_log_result = exec_container
     re.sub(r'\x1b(\[.*?[@-~]|\].*?(\x07|\x1b\\))', '', test_log_result)
     tr = TestResult(compilation_log_result, test_log_result)
