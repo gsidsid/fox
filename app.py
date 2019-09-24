@@ -153,7 +153,7 @@ def compiler(filename):
         comp_container = client.containers.run('akabe/ocaml:ubuntu16.04_ocaml4.07.0',volumes={os.getcwd()+'/files':{'bind':'/files', 'mode': 'ro'},'/var/run/docker.sock':{'bind':'/var/run/docker.sock', 'mode': 'rw'}},command="ocaml /files/" + str(filename))
         compilation_log_result = comp_container
         return flask.Response(status=200)
-    except docker.errors.ContainerError as e:
+    except Exception as e:
         compilation_log_result = str(e.message)
         os.remove(os.path.join('files',filename))
     return flask.Response(json.dumps({"error":compilation_log_result}), status=400, mimetype='application/json')
