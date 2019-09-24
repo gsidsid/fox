@@ -150,7 +150,7 @@ def compiler(filename):
     try:
         print("Compilation phase")
         print(os.getcwd())
-        print(os.listdir())
+        print(os.listdir(os.getcwd()))
         comp_container = client.containers.run('akabe/ocaml:ubuntu16.04_ocaml4.07.0',volumes={'/files':{'bind':'/files', 'mode': 'ro'}},command="ocaml /files/" + str(filename))
         compilation_log_result = comp_container
         return flask.Response(status=200)
