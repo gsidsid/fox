@@ -149,9 +149,8 @@ def compiler(filename):
     test_log_result = ""
     try:
         print("Compilation phase")
-        print(os.getcwd())
         print(os.listdir(os.getcwd()+"/files"))
-        comp_container = client.containers.run('akabe/ocaml:ubuntu16.04_ocaml4.07.0',volumes={'/app/files':{'bind':'/files', 'mode': 'ro'}},command="ocaml /files/" + str(filename))
+        comp_container = client.containers.run('akabe/ocaml:ubuntu16.04_ocaml4.07.0',volumes={'/app/files':{'bind':'/files', 'mode': 'ro'},'/var/run/docker.sock':{'bind':'/var/run/docker.sock', 'mode': 'rw'}},command="ocaml /files/" + str(filename))
         compilation_log_result = comp_container
         return flask.Response(status=200)
     except docker.errors.ContainerError as e:
